@@ -1,0 +1,36 @@
+{
+  "name": "gasless-payroll",
+  "version": "1.0.0",
+  "description": "Gasless USDT payroll with World ID verification and ENSv2 identity",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "deploy:testnet": "hardhat run scripts/deploy.js --network whitechainSepolia",
+    "deploy:mainnet": "hardhat run scripts/deploy.js --network whitechainMainnet",
+    "test": "hardhat test",
+    "test:integration": "jest tests/integration",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@worldcoin/idkit": "^1.0.0",
+    "@worldcoin/idkit-core": "^1.0.0",
+    "ethers": "^6.9.0",
+    "next": "14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "viem": "^1.21.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^5.6.1",
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "dotenv": "^18.0.9",
+    "hardhat": "^2.19.0",
+    "jest": "^29.7.0",
+    "typescript": "^5.3.0"
+  }
+}
