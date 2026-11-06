@@ -249,13 +249,14 @@ main {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 14px 28px;
+  min-height: 46px;
+  padding: 12px 20px;
   font-size: 0.875rem;
   font-weight: 600;
-  border-radius: 24px;
-  border: none;
+  border-radius: 9px;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: all 150ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -269,16 +270,20 @@ main {
   background: var(--color-primary);
   color: var(--color-bg);
   font-weight: 600;
+  border-color: var(--color-primary);
+  box-shadow: 0 6px 14px rgba(16, 24, 40, 0.14);
 }
 
 .primary-btn:hover:not(:disabled) {
-  background: #333333;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  background: var(--color-primary-light);
+  border-color: var(--color-primary-light);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
 }
 
 .primary-btn:active:not(:disabled) {
-  transform: translateY(1px);
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(16, 24, 40, 0.14);
 }
 
 .secondary-btn {
@@ -286,15 +291,19 @@ main {
   color: var(--color-text);
   border: 1px solid var(--color-border);
   font-weight: 500;
+  box-shadow: 0 3px 8px rgba(16, 24, 40, 0.05);
 }
 
 .secondary-btn:hover:not(:disabled) {
   border-color: var(--color-primary);
-  background: #ffffff;
+  background: var(--color-bg-card);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.12);
 }
 
 .secondary-btn:active:not(:disabled) {
-  background: #e8e8e8;
+  background: var(--color-bg-elevated);
+  transform: translateY(0);
 }
 
 .accent-btn {
@@ -324,6 +333,24 @@ main {
   color: var(--color-text);
   border-color: var(--color-border);
   background: rgba(0, 0, 0, 0.03);
+}
+
+button:focus-visible,
+.btn:focus-visible,
+.theme-toggle:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.32);
+  outline-offset: 3px;
+}
+
+.verification-options button,
+.invoice-form > button,
+.payment-status > button,
+.selected-invoice > button,
+.wallet-connection button,
+.alt-path button,
+.not-verified button {
+  width: 100%;
+  min-height: 48px;
 }
 
 .btn-sm {
@@ -1106,11 +1133,13 @@ body { background: var(--color-bg); transition: background-color 240ms ease, col
     var(--color-bg);
 }
 .app-background::before {
-  background-image: linear-gradient(rgba(16, 24, 40, 0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(37, 99, 235, 0.035) 1px, transparent 1px);
-  background-size: 32px 32px;
+  background-image: radial-gradient(circle, rgba(37, 99, 235, 0.12) 1.2px, transparent 1.5px);
+  background-size: 22px 22px;
+  opacity: 0.72;
 }
 :root[data-theme='dark'] .app-background::before {
-  background-image: linear-gradient(rgba(120, 167, 255, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(120, 167, 255, 0.045) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(120, 167, 255, 0.18) 1.2px, transparent 1.6px);
+  opacity: 0.58;
 }
 .app-container { max-width: 1280px; padding: 28px 44px 24px; }
 .app-header { 
@@ -1152,7 +1181,7 @@ body { background: var(--color-bg); transition: background-color 240ms ease, col
 .theme-toggle span { color: var(--color-accent); font-size: 0.9rem; line-height: 1; }
 .theme-toggle:hover { color: var(--color-text); border-color: var(--color-accent); transform: translateY(-1px); }
 .app-nav { gap: 6px; }
-.nav-btn { padding: 9px 13px; border-radius: 7px; position: relative; overflow: hidden; }
+.nav-btn { min-height: 40px; padding: 8px 14px; border-radius: 8px; position: relative; overflow: hidden; }
 .nav-btn::after { content: ''; position: absolute; inset: 0; background: rgba(255, 255, 255, 0.16); transform: translateX(-110%); transition: transform 260ms ease; }
 .nav-btn:hover:not(:disabled)::after { transform: translateX(110%); }
 .nav-btn.active { box-shadow: 0 6px 16px rgba(23, 61, 54, 0.16); }
