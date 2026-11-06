@@ -1186,6 +1186,14 @@ body { background: var(--color-bg); transition: background-color 240ms ease, col
 .workflow-step:nth-child(4) { animation-delay: 210ms; }
 .info-bottom-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 34px; padding-top: 32px; }
 .info-bottom-grid h4 { margin: 8px 0 8px; color: var(--color-text); font-size: 1.05rem; }
+.relayer-explainer { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 28px; align-items: center; margin-top: 32px; padding: 24px; border: 1px solid rgba(37, 99, 235, 0.28); border-radius: 9px; background: rgba(207, 224, 255, 0.24); }
+.relayer-explainer h4 { margin: 8px 0; color: var(--color-text); font-size: 1.05rem; }
+.relayer-explainer p:not(.eyebrow), .info-disclaimer { color: var(--color-text-muted); font-size: 0.8rem; line-height: 1.65; }
+.relayer-example { display: flex; flex-direction: column; gap: 5px; padding-left: 20px; border-left: 1px solid rgba(37, 99, 235, 0.28); color: var(--color-text-muted); font-size: 0.72rem; }
+.relayer-example strong { color: var(--color-primary-light); font-size: 1.4rem; }
+.info-disclaimer { margin-top: 16px; color: var(--color-text-dim); font-size: 0.68rem; }
+:root[data-theme='dark'] .relayer-explainer { background: rgba(37, 99, 235, 0.12); border-color: rgba(120, 167, 255, 0.3); }
+:root[data-theme='dark'] .relayer-example { border-color: rgba(120, 167, 255, 0.3); }
 
 @media (prefers-reduced-motion: reduce) {
   .app-background, .workspace-main > *, .verification-gate, .verified-state, .invoice-form, .payment-status, .merchant-dashboard, .contributor-profile, .workflow-step { animation: none; }
@@ -1206,6 +1214,8 @@ body { background: var(--color-bg); transition: background-color 240ms ease, col
   .workflow-step:nth-child(3), .workflow-step:nth-child(4) { border-bottom: 0; }
   .workflow-step:nth-child(4) { padding-left: 14px; }
   .info-bottom-grid { grid-template-columns: 1fr; gap: 24px; }
+  .relayer-explainer { grid-template-columns: 1fr; gap: 18px; }
+  .relayer-example { padding: 16px 0 0; border-top: 1px solid rgba(37, 99, 235, 0.28); border-left: 0; }
   .wallet-connection { align-items: stretch; flex-direction: column; }
 }
 
@@ -1213,6 +1223,43 @@ body { background: var(--color-bg); transition: background-color 240ms ease, col
   .app-header { grid-template-columns: 1fr auto; }
   .header-meta { display: flex; gap: 10px; }
   .header-caption { display: none; }
+}
+
+/* Dark surfaces must replace the light-mode white layers, not just recolor text. */
+:root[data-theme='dark'] .app-header,
+:root[data-theme='dark'] .info-panel {
+  background: rgba(15, 23, 37, 0.94);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+:root[data-theme='dark'] .workspace-summary,
+:root[data-theme='dark'] .theme-toggle {
+  background: var(--color-bg-card);
+}
+
+:root[data-theme='dark'] .secondary-btn:hover:not(:disabled) {
+  background: var(--color-bg-elevated);
+}
+
+:root[data-theme='dark'] .secondary-btn:active:not(:disabled) {
+  background: var(--color-border);
+}
+
+:root[data-theme='dark'] .primary-btn:hover:not(:disabled) {
+  background: var(--color-primary-light);
+  color: #080d16;
+}
+
+:root[data-theme='dark'] .demo-note,
+:root[data-theme='dark'] .verified-state code,
+:root[data-theme='dark'] .payment-status .invoice-info code,
+:root[data-theme='dark'] .invoice-meta code {
+  background: rgba(120, 167, 255, 0.1);
+  border-color: var(--color-border);
+}
+
+:root[data-theme='dark'] .demo-note {
+  border-color: var(--color-border);
 }
 
 @media (max-width: 768px) {

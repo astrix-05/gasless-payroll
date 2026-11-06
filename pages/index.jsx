@@ -11,6 +11,7 @@ const HomePage = () => {
   const [currentInvoiceId, setCurrentInvoiceId] = useState(null);
   const [currentView, setCurrentView] = useState('verification'); // 'verification', 'invoice', 'payment', 'profile', 'merchant', 'info'
   const [relayerAddress, setRelayerAddress] = useState('0x0000000000000000000000000000000000000001'); // Demo relayer
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
     // Check for stored verification state
@@ -22,6 +23,21 @@ const HomePage = () => {
       setCurrentView('profile');
     }
   }, []);
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('payroll_theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const nextTheme = storedTheme || (prefersDark ? 'dark' : 'light');
+    setTheme(nextTheme);
+    document.documentElement.dataset.theme = nextTheme;
+  }, []);
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    localStorage.setItem('payroll_theme', nextTheme);
+    document.documentElement.dataset.theme = nextTheme;
+  };
 
   const handleVerified = (contractorData) => {
     setIsVerifiedContractor(true);
@@ -59,6 +75,15 @@ const HomePage = () => {
         <div className="header-meta">
           <span className="network-status"><span aria-hidden="true">●</span> Sepolia testnet</span>
           <span className="header-caption">USDT settlement</span>
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            <span aria-hidden="true">{theme === 'dark' ? '☼' : '☾'}</span>
+            {theme === 'dark' ? 'Light' : 'Dark'}
+          </button>
         </div>
         <nav className="app-nav" aria-label="Payroll workspace">
           <button
@@ -149,6 +174,22 @@ const HomePage = () => {
                 <p>World ID reduces duplicate identities, Whitechain handles settlement, and ENSv2 gives payment history a portable home.</p>
               </div>
             </div>
+
+            <div className="relayer-explainer">
+              <div>
+                <p className="eyebrow">How the relayer earns</p>
+                <h4>Gasless for the user, sustainable for the service.</h4>
+                <p>The relayer submits the authorized transaction and pays the network gas first. The service can charge a small, transparent fee to the merchant, such as 1% of the payment, to cover gas and operate profitably.</p>
+              </div>
+              <div className="relayer-example" aria-label="Relayer fee example">
+                <span>Example payment</span>
+                <strong>$5,000 USDT</strong>
+                <span>1% service fee = $50</span>
+                <span>Network gas is paid by the relayer</span>
+              </div>
+            </div>
+
+            <p className="info-disclaimer">This interface is a testnet demo. The current relayer address and payment flow are simulated; production would use a funded relayer wallet and an on-chain fee mechanism.</p>
           </section>
         )}
 
