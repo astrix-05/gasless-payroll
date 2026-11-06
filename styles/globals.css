@@ -1139,6 +1139,10 @@ body { background: var(--color-bg); }
 .workflow-step p, .info-bottom-grid p:not(.eyebrow) { color: var(--color-text-muted); font-size: 0.8rem; line-height: 1.65; }
 .info-bottom-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 34px; padding-top: 32px; }
 .info-bottom-grid h4 { margin: 8px 0 8px; color: var(--color-text); font-size: 1.05rem; }
+.wallet-connection { display: flex; justify-content: space-between; align-items: center; gap: 16px; max-width: 520px; margin: 24px auto 0; padding: 14px 16px; border: 1px solid var(--color-border); border-radius: 8px; background: rgba(235, 231, 222, 0.62); text-align: left; }
+.wallet-connection > div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.wallet-connection strong { color: var(--color-text); font-size: 0.85rem; }
+.wallet-connection code { max-width: 220px; overflow: hidden; color: var(--color-text-muted); font: 0.68rem var(--font-mono); text-overflow: ellipsis; white-space: nowrap; }
 
 @media (max-width: 768px) {
   .info-panel { padding: 24px 20px; }
@@ -1149,6 +1153,7 @@ body { background: var(--color-bg); }
   .workflow-step:nth-child(3), .workflow-step:nth-child(4) { border-bottom: 0; }
   .workflow-step:nth-child(4) { padding-left: 14px; }
   .info-bottom-grid { grid-template-columns: 1fr; gap: 24px; }
+  .wallet-connection { align-items: stretch; flex-direction: column; }
 }
 
 @media (max-width: 900px) {

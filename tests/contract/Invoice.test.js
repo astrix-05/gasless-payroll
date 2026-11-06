@@ -7,12 +7,13 @@ describe("WhitechainPayment Contract", function () {
   let owner;
   let contractor;
   let relayer;
+  let payer;
 
   beforeEach(async function () {
     [owner, contractor, relayer, payer] = await ethers.getSigners();
 
     const WhitechainPayment = await ethers.getContractFactory("WhitechainPayment");
-    paymentContract = await WhitechainPayment.deploy(0xcedfB56113143d55b2358b8CFbB0dEB5Ad2f55a7);
+    paymentContract = await WhitechainPayment.deploy();
     await paymentContract.waitForDeployment();
 
     const USDT = await ethers.getContractFactory("USDTMock");
@@ -26,9 +27,9 @@ describe("WhitechainPayment Contract", function () {
   it("Should create invoice with correct details", async function () {
     const amount = ethers.parseEther("100");
     const daysValid = 30;
-    const ensSubname = ethers.toUtf8Bytes("contractor001.dao");
+    const ensSubname = ethers.encodeBytes32String("contractor001.dao");
 
-    const tx = await paymentContract.createInvoice(amount, daysValid, ensSubname, relayer.address);
+    const tx = await paymentContract.connect(contractor).createInvoice(amount, daysValid, ensSubname);
     const receipt = await tx.wait();
     const invoiceId = receipt.logs[0].args.invoiceId;
 
@@ -42,28 +43,28 @@ describe("WhitechainPayment Contract", function () {
   it("Should reject invoice creation with zero amount", async function () {
     const amount = ethers.parseEther("0");
     await expect(
-      paymentContract.createInvoice(amount, 30, ethers.toUtf8Bytes("test.dao"), relayer.address)
+      paymentContract.connect(contractor).createInvoice(amount, 30, ethers.encodeBytes32String("test.dao"))
     ).to.be.revertedWith("Amount must be positive");
   });
 
   it("Should reject invoice creation with zero days", async function () {
     const amount = ethers.parseEther("100");
     await expect(
-      paymentContract.createInvoice(amount, 0, ethers.toUtf8Bytes("test.dao"), relayer.address)
+      paymentContract.connect(contractor).createInvoice(amount, 0, ethers.encodeBytes32String("test.dao"))
     ).to.be.revertedWith("Must have valid period");
   });
 
   it("Should release payment after deadline", async function () {
     const amount = ethers.parseEther("100");
     const daysValid = 1;
-    const ensSubname = ethers.toUtf8Bytes("contractor002.dao");
+    const ensSubname = ethers.encodeBytes32String("contractor002.dao");
 
-    const tx = await paymentContract.createInvoice(amount, daysValid, ensSubname, relayer.address);
+    const tx = await paymentContract.connect(contractor).createInvoice(amount, daysValid, ensSubname);
     const receipt = await tx.wait();
     const invoiceId = receipt.logs[0].args.invoiceId;
 
     // Fast-forward time past deadline
-    await ethers.provider.send("evm_increaseTime", [daysValid * 2]);
+    await ethers.provider.send("evm_increaseTime", [daysValid * 86400 + 1]);
     await ethers.provider.send("evm_mine");
 
     // Set paid amount for release
@@ -80,9 +81,9 @@ describe("WhitechainPayment Contract", function () {
   it("Should reject duplicate release", async function () {
     const amount = ethers.parseEther("100");
     const daysValid = 30;
-    const ensSubname = ethers.toUtf8Bytes("contractor003.dao");
+    const ensSubname = ethers.encodeBytes32String("contractor003.dao");
 
-    const tx = await paymentContract.createInvoice(amount, daysValid, ensSubname, relayer.address);
+    const tx = await paymentContract.connect(contractor).createInvoice(amount, daysValid, ensSubname);
     const receipt = await tx.wait();
     const invoiceId = receipt.logs[0].args.invoiceId;
 
@@ -93,20 +94,20 @@ describe("WhitechainPayment Contract", function () {
   });
 
   it("Should register contractor with ENSv2 subname", async function () {
-    const ensSubname = ethers.toUtf8Bytes("contractor004.dao");
+    const ensSubname = ethers.encodeBytes32String("contractor004.dao");
 
     await expect(
-      paymentContract.registerContractor(ensSubname)
+      paymentContract.connect(contractor).registerContractor(ensSubname)
     ).to.emit(paymentContract, "ContractorRegistered").withArgs(contractor.address, ensSubname);
   });
 
   it("Should get ENSv2 subname for contractor", async function () {
-    const ensSubname = ethers.toUtf8Bytes("contractor005.dao");
+    const ensSubname = ethers.encodeBytes32String("contractor005.dao");
 
     // First create invoice to set subname mapping
     const amount = ethers.parseEther("100");
     const daysValid = 30;
-    const tx = await paymentContract.createInvoice(amount, daysValid, ensSubname, relayer.address);
+    const tx = await paymentContract.connect(contractor).createInvoice(amount, daysValid, ensSubname);
     const receipt = await tx.wait();
     const invoiceId = receipt.logs[0].args.invoiceId;
 

@@ -1,4 +1,5 @@
 const { ethers } = require("hardhat");
+const { expect } = require("chai");
 
 describe("World IDKit Integration", function () {
   it("Should simulate World ID verification flow", async function () {

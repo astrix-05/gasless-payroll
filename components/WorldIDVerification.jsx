@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ethers } from 'ethers';
 import { verifyWithWorldID, registerENSv2Subname, getVerifiedContractorAddress } from '../utils/worldid';
 import { registerSubname, getContractorProfile } from '../utils/ensv2';
 
@@ -9,6 +10,24 @@ const WorldIDVerification = ({ onVerified }) => {
   const [ensStatus, setENSStatus] = useState(null);
   const [error, setError] = useState(null);
   const [altPath, setAltPath] = useState(null); // 'denied' | 'expired' | 'cancelled'
+  const [walletAddress, setWalletAddress] = useState('');
+
+  const connectWallet = async () => {
+    setError(null);
+
+    if (!window.ethereum) {
+      setError('No wallet detected. Install MetaMask or another EVM wallet to continue.');
+      return;
+    }
+
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const accounts = await provider.send('eth_requestAccounts', []);
+      setWalletAddress(accounts[0] || '');
+    } catch (err) {
+      setError(`Wallet connection failed: ${err.message}`);
+    }
+  };
 
   useEffect(() => {
     // Check for stored verification state from session
@@ -32,6 +51,10 @@ const WorldIDVerification = ({ onVerified }) => {
     setENSStatus(null);
 
     try {
+      if (!walletAddress) {
+        throw new Error('Connect your wallet before verifying your contractor identity');
+      }
+
       // Step 1: Verify with World IDKit
       const result = await verifyWithWorldID();
 
@@ -44,7 +67,7 @@ const WorldIDVerification = ({ onVerified }) => {
 
       // Use the address returned by the verification itself (NOT the session,
       // which is only written later). Fall back to a generated address.
-      const contractorAddress = result.contractorAddress || getVerifiedContractorAddress();
+      const contractorAddress = walletAddress;
       const nullifierHash = result.nullifierHash;
 
       if (!contractorAddress || contractorAddress === '0x0000000000000000000000000000000000000000') {
@@ -129,10 +152,21 @@ const WorldIDVerification = ({ onVerified }) => {
             This ensures Sybil-resistant contractor onboarding.
           </p>
 
+          <div className="wallet-connection">
+            <div>
+              <span className="eyebrow">Step 1 / wallet</span>
+              <strong>{walletAddress ? 'Wallet connected' : 'Connect a payout wallet'}</strong>
+              {walletAddress && <code>{walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}</code>}
+            </div>
+            <button onClick={connectWallet} disabled={registeringENS} className="secondary-btn">
+              {walletAddress ? 'Change wallet' : 'Connect wallet'}
+            </button>
+          </div>
+
           <div className="verification-options">
             <button
               onClick={handleVerification}
-              disabled={registeringENS}
+              disabled={registeringENS || !walletAddress}
               className="primary-btn"
             >
               {registeringENS ? 'Verifying...' : 'Verify with World ID'}

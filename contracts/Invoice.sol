@@ -24,6 +24,7 @@ contract WhitechainPayment {
     // --- Mappings ---
     mapping(bytes32 => Invoice) public invoices;
     mapping(address => bytes32) public invoiceIds;
+    mapping(address => bytes32) private contractorENSv2Subnames;
 
     constructor() {}
 
@@ -48,6 +49,8 @@ contract WhitechainPayment {
             released: false,
             ensSubname: ensSubname_
         });
+        invoiceIds[msg.sender] = invoiceId;
+        contractorENSv2Subnames[msg.sender] = ensSubname_;
 
         emit InvoiceCreated(invoiceId, msg.sender, amount_, ensSubname_);
     }
@@ -81,12 +84,13 @@ contract WhitechainPayment {
         if (invoiceId != bytes32(0)) {
             invoices[invoiceId].ensSubname = ensSubname;
         }
+        contractorENSv2Subnames[msg.sender] = ensSubname;
         emit ContractorRegistered(msg.sender, ensSubname);
     }
 
     /// @dev Get ENSv2 subname for a contractor
     function getENSv2Subname(address contractor) external view returns (bytes32) {
         bytes32 invoiceId = invoiceIds[contractor];
-        return invoiceId != bytes32(0) ? invoices[invoiceId].ensSubname : bytes32(0);
+        return invoiceId != bytes32(0) ? invoices[invoiceId].ensSubname : contractorENSv2Subnames[contractor];
     }
 }

@@ -1,4 +1,5 @@
 const { ethers } = require("hardhat");
+const { expect } = require("chai");
 
 describe("ENSv2 Integration", function () {
   let ensv2Registry;
@@ -15,7 +16,7 @@ describe("ENSv2 Integration", function () {
   });
 
   it("Should register subname under dao.eth", async function () {
-    const subname = ethers.toUtf8Bytes("contractor001");
+    const subname = ethers.encodeBytes32String("contractor001");
     const ownerAddress = contractor.address;
     const resolver = contractor.address;
     const expiry = 365 * 24 * 60 * 60; // 1 year in seconds
@@ -39,7 +40,7 @@ describe("ENSv2 Integration", function () {
   });
 
   it("Should resolve subname to get payment history", async function () {
-    const subname = ethers.toUtf8Bytes("contractor002");
+    const subname = ethers.encodeBytes32String("contractor002");
     const ownerAddress = contractor.address;
     const resolver = contractor.address;
 
@@ -67,18 +68,16 @@ describe("ENSv2 Integration", function () {
   });
 
   it("Should link ENSv2 subname to Whitechain payment contract", async function () {
-    const subname = ethers.toUtf8Bytes("contractor003");
+    const subname = ethers.encodeBytes32String("contractor003");
     const ensSubnameHash = ethers.keccak256(subname);
 
     // Simulate contract registering ENSv2 subname
     const WhitechainPayment = await ethers.getContractFactory("WhitechainPayment");
-    const paymentContract = await WhitechainPayment.deploy(
-      "0xcedfB56113143d55b2358b8CFbB0dEB5Ad2f55a7"
-    );
+    const paymentContract = await WhitechainPayment.deploy();
     await paymentContract.waitForDeployment();
 
     // Register contractor with ENSv2 subname
-    await paymentContract.registerContractor(ensSubnameHash);
+    await paymentContract.connect(contractor).registerContractor(ensSubnameHash);
 
     const storedSubname = await paymentContract.getENSv2Subname(contractor.address);
     expect(storedSubname).to.equal(ensSubnameHash);
