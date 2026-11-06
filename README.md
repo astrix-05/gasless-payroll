@@ -1,14 +1,134 @@
 # Gasless Stablecoin Payroll
 
+## Overview
 A drop-in payroll/invoicing solution that combines:
-- Gasless USDT payments on Whitechain Sepolia via EIP-3009 permits
-- World ID verification (Passport/Selfie) for contractor identity
-- ENSv2 subnames for contributor reputation and payment history
+- **Gasless USDT payments on Whitechain Sepolia via EIP-3009 permits**
+- **World ID verification** (Proof of Human, Passport, Selfie Check) for contractor identity
+- **ENSv2 subnames** for contributor reputation and payment history
 
 ## Prize eligibility
 - **Whitechain**: Gasless USDT payments on Whitechain Sepolia (chain ID 1874)
 - **World ID**: Identity verification with real credential choice
 - **ENSv2**: Subname integration for contributor identity
+
+## Core Features
+
+### Contractor Onboarding
+- ✅ World ID verification (Proof of Human, Passport/NFC, or Selfie Check)
+- ✅ One-time identity gate before any payment flow
+- ✅ Alternative rejection path demoed (expired verification, cancelled)
+
+### Payment Flow
+- ✅ Invoice creation with USDT amount and payment terms
+- ✅ Gasless payment via merchant relayer using EIP-3009 permits
+- ✅ Onchain payment tracking with payment gateway fee split
+- ✅ Recurring payroll, renewals, and refunds supported
+
+### Contributor Identity
+- ✅ ENSv2 subname (e.g., `contractor.dao.eth`) for each verified contractor
+- ✅ Permissioned text records: payment history, reputation, contact
+- ✅ Subname ownership transfer and revocation support
+
+## Tech Stack
+- **Whitechain Sepolia** (chain ID 1874) for payments
+- **ENSv2** (hierarchical registry, permissioned resolver)
+- **World IDKit** (Passport/Selfie credential options)
+- **EIP-3009 relayer** for gasless payments
+- **React/Next.js** frontend (mobile-first)
+
+## Demo Workflow
+
+1. **Contractor Verification** — Scan World ID QR code, get verified instantly, `contractor.dao.eth` name reserved.
+2. **Invoice Creation** — Contractor creates invoice via UI, smart contract holds USDT in escrow.
+3. **Gasless Payment** — Merchant pays via relayer without gas, contractor receives payment on Whitechain.
+4. **Contributor Profile** — ENSv2 subname linked to payment history/reputation.
+
+## Setup Instructions
+
+### Prerequisites
+- Node.js 18+
+- Git
+- Whitechain Sepolia RPC endpoint
+- ENSv2 deployed on Sepolia
+- World ID testnet credentials
+
+### Local Development
+```bash
+# Clone the repo
+git clone /Users/astrix_05/gasless-payroll .
+cd gasless-payroll
+
+# Install dependencies
+npm install
+
+# Start local development
+npm run dev
+```
+
+### Deployment
+```bash
+# Testnet deployment
+npm run deploy:testnet
+
+# Production deployment
+npm run deploy:mainnet
+```
+
+## Project Structure
+
+```
+.
+├── contracts/                              # Smart contracts (Solidity 0.8.20)
+│   ├── Invoice.sol                         # Escrow + payment logic
+│   ├── WhitechainPayment.sol              # EIP-3009 relayer
+│   └── interfaces/
+│       └── IWhitechain.sol                # Interface definitions
+├── frontend/                               # Next.js frontend (React/TypeScript)
+│   ├── src/
+│   │   ├── components/                     # React components
+│   │   │   ├── WorldIDVerification.jsx    # World ID gate + alt paths
+│   │   │   ├── InvoiceForm.jsx            # Invoice creation UI
+│   │   │   ├── PaymentStatus.jsx          # Payment tracking
+│   │   │   └── ContributorProfile.jsx     # ENSv2 subname view
+│   │   ├── pages/                          # Page components
+│   │   │   ├── index.jsx                  # Home / contractor flow
+│   │   │   ├── invoice.jsx                # Invoice creation
+│   │   │   └── merchant.jsx              # Merchant dashboard
+│   │   ├── hooks/                         # Custom hooks
+│   │   │   └── useWorldID.jsx             # World ID verification
+│   │   └── utils/                         # Utility functions
+│   │       ├── whitechain.js               # Whitechain interactions
+│   │       ├── ensv2.js                    # ENSv2 interactions
+│   │       └── worldid.js                  # World ID utilities
+├── scripts/                                # Deployment scripts
+├── docs/                                   # Hackathon submission docs
+│   ├── FEEDBACK.md                         # Whitechain sponsor feedback
+│   ├── CROPS.md                            # Censorship-resistant structure
+│   └── demo-script.md                     # 7-scene demo video script
+├── tests/                                  # Test suite
+│   ├── contract/                          # Contract tests
+│   │   ├── Invoice.test.js                 # Invoice functionality
+│   │   └── whitechain.test.js              # Whitechain payments
+│   └── integration/                       # Integration tests
+│       ├── worldid.test.js                 # World ID integration
+│       └── ensv2.test.js                   # ENSv2 integration
+├── package.json
+├── README.md                               # Project documentation
+└── CONTRIBUTING.md
+```
+
+## Prize Eligibility
+
+| **Sponsor** | **Technology** | **Prize Range** |
+|-------------|----------------|----------------|
+| **Whitechain** | Gasless USDT payments on Whitechain Sepolia (chain ID 1874) | $5,000 - $15,000 |
+| **World ID** | Zero-knowledge proof of human verification | $5,000 - $15,000 |
+| **ENSv2** | Hierarchical subname registry for contributor identity | $5,000 - $15,000 |
+
+**Total potential: ~$15,000** across all three sponsor bounties!
+
+## License
+MIT
 
 ## Features
 
