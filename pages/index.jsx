@@ -70,21 +70,18 @@ const HomePage = () => {
           <button
             className={currentView === 'profile' ? 'nav-btn active' : 'nav-btn'}
             onClick={() => setCurrentView('profile')}
-            disabled={!isVerifiedContractor}
           >
             Profile
           </button>
           <button
             className={currentView === 'invoice' ? 'nav-btn active' : 'nav-btn'}
             onClick={() => setCurrentView('invoice')}
-            disabled={!isVerifiedContractor}
           >
             New invoice
           </button>
           <button
             className={currentView === 'merchant' ? 'nav-btn active' : 'nav-btn'}
             onClick={() => setCurrentView('merchant')}
-            disabled={!isVerifiedContractor}
           >
             Payments
           </button>
