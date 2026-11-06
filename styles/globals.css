@@ -1129,6 +1129,21 @@ body { background: var(--color-bg); transition: background-color 240ms ease, col
 .brand-mark { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 9px; background: var(--color-primary); color: var(--color-secondary); font: 700 0.72rem var(--font-mono); }
 .eyebrow { color: var(--color-accent); font: 700 0.64rem var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; }
 .app-header h1 { margin-top: 2px; font-size: 1.15rem; letter-spacing: 0; background: none; -webkit-text-fill-color: initial; }
+.app-header h1,
+.workspace-intro h2,
+.verification-gate h3,
+.verified-state h3,
+.invoice-form h3,
+.payment-status h3,
+.merchant-dashboard h3,
+.info-panel h3 {
+  font-style: italic;
+  font-weight: 800;
+}
+.workspace-intro h2 { font-size: clamp(2rem, 4.5vw, 3.4rem); }
+.verification-gate h3,
+.verified-state h3 { font-size: clamp(2rem, 5vw, 3.2rem); }
+.info-panel h3 { font-size: clamp(2rem, 4vw, 3rem); }
 .header-meta { gap: 16px; font-size: 0.72rem; color: var(--color-text-muted); }
 .network-status { gap: 6px; color: var(--color-primary); font-weight: 700; }
 .network-status span { color: var(--color-success); font-size: 0.6rem; }
@@ -1186,6 +1201,47 @@ body { background: var(--color-bg); transition: background-color 240ms ease, col
 .workflow-step:nth-child(4) { animation-delay: 210ms; }
 .info-bottom-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 34px; padding-top: 32px; }
 .info-bottom-grid h4 { margin: 8px 0 8px; color: var(--color-text); font-size: 1.05rem; }
+
+/* Popup feedback animation for notices and newly revealed panels. */
+@keyframes popup-in {
+  0% { opacity: 0; transform: translateY(12px) scale(0.97); filter: blur(2px); }
+  65% { opacity: 1; transform: translateY(-2px) scale(1.005); filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes popup-glow {
+  0%, 100% { box-shadow: 0 0 0 rgba(37, 99, 235, 0); }
+  45% { box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.1); }
+}
+.alt-path,
+.selected-invoice,
+.relayer-explainer,
+.error,
+.success,
+.warning,
+.info,
+.profile-error,
+.not-verified {
+  animation: popup-in 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.alt-path,
+.selected-invoice,
+.not-verified {
+  animation-name: popup-in, popup-glow;
+  animation-duration: 360ms, 900ms;
+  animation-delay: 0ms, 120ms;
+}
+.status-badge {
+  animation: popup-in 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.error,
+.success,
+.warning,
+.info {
+  padding: 10px 12px;
+  border: 1px solid currentColor;
+  border-radius: 7px;
+  background: color-mix(in srgb, currentColor 8%, var(--color-bg-card));
+}
 .relayer-explainer { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 28px; align-items: center; margin-top: 32px; padding: 24px; border: 1px solid rgba(37, 99, 235, 0.28); border-radius: 9px; background: rgba(207, 224, 255, 0.24); }
 .relayer-explainer h4 { margin: 8px 0; color: var(--color-text); font-size: 1.05rem; }
 .relayer-explainer p:not(.eyebrow), .info-disclaimer { color: var(--color-text-muted); font-size: 0.8rem; line-height: 1.65; }
@@ -1196,7 +1252,7 @@ body { background: var(--color-bg); transition: background-color 240ms ease, col
 :root[data-theme='dark'] .relayer-example { border-color: rgba(120, 167, 255, 0.3); }
 
 @media (prefers-reduced-motion: reduce) {
-  .app-background, .workspace-main > *, .verification-gate, .verified-state, .invoice-form, .payment-status, .merchant-dashboard, .contributor-profile, .workflow-step { animation: none; }
+  .app-background, .workspace-main > *, .verification-gate, .verified-state, .invoice-form, .payment-status, .merchant-dashboard, .contributor-profile, .workflow-step, .alt-path, .selected-invoice, .relayer-explainer, .error, .success, .warning, .info, .profile-error, .not-verified, .status-badge { animation: none; }
   .nav-btn::after, .primary-btn::after, .secondary-btn::after { display: none; }
 }
 .wallet-connection { display: flex; justify-content: space-between; align-items: center; gap: 16px; max-width: 520px; margin: 24px auto 0; padding: 14px 16px; border: 1px solid var(--color-border); border-radius: 8px; background: rgba(235, 231, 222, 0.62); text-align: left; }
